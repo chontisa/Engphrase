@@ -19,7 +19,7 @@ var phrases = [
   'What\’s your job',
   'I\’m twenty years old',
   'When is your birthday',
-  'My birthday is on January, 2nd.',
+  'My birthday is on January, 2nd',
   'Do you have a mobile phone',
   'Yes\, I do',
   'How long have you been in Thailand',
