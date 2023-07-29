@@ -123,30 +123,6 @@ var phrases = [
   'He\’s very annoying'
 ];
 
-// Check if SpeechSynthesisUtterance is supported
-if ('speechSynthesis' in window) {
-  let speech = new SpeechSynthesisUtterance();
-  speech.lang = "en";
-
-  let voices = [];
-  window.speechSynthesis.onvoiceschanged = () => {
-    voices = window.speechSynthesis.getVoices();
-    speech.voice = voices[0];
-    let voiceSelect = document.querySelector("#voices");
-    voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
-  };
-
-  function readPhrase() {
-    const phraseText = document.querySelector('.phrase').textContent;
-    speech.text = phraseText;
-    window.speechSynthesis.speak(speech);
-  }
-} else {
-  // Handle if SpeechSynthesisUtterance is not supported on the browser/platform
-  console.log('Speech synthesis is not supported on this browser.');
-  // Optionally, you can display a message to users or provide a fallback.
-}
-
 var phrasePara = document.querySelector('.phrase');
 var resultPara = document.querySelector('.result');
 var diagnosticPara = document.querySelector('.output');
