@@ -121,6 +121,7 @@ var phrases = [
   'Something is wrong',
   'Leave me alone',
   'He\’s very annoying'
+
 ];
 
 var phrasePara = document.querySelector('.phrase');
@@ -155,23 +156,9 @@ function testSpeech() {
   resultPara.style.background = 'rgba(0,0,0,0.2)';
   diagnosticPara.textContent = '...diagnostic messages';
 
-  let grammar = '#JSGF V1.0; grammar phrase; public <phrase> = ' + phrase +';';
-  let recognition;
-  if ('SpeechRecognition' in window) {
-    // For modern browsers that support the standard SpeechRecognition API.
-    recognition = new SpeechRecognition();
-  } else if ('webkitSpeechRecognition' in window) {
-    // For WebKit-based browsers like Chrome.
-    recognition = new webkitSpeechRecognition();
-  } else {
-    // If the browser doesn't support speech recognition at all, inform the user.
-    alert("Sorry, your browser doesn't support speech recognition.");
-    testBtn.disabled = false;
-    testBtn.textContent = 'Start new test';
-    return;
-  }
-
-  let speechRecognitionList = new SpeechGrammarList();
+  var grammar = '#JSGF V1.0; grammar phrase; public <phrase> = ' + phrase +';';
+  var recognition = new SpeechRecognition();
+  var speechRecognitionList = new SpeechGrammarList();
   speechRecognitionList.addFromString(grammar, 1);
   recognition.grammars = speechRecognitionList;
   recognition.lang = 'en-US';
@@ -181,10 +168,10 @@ function testSpeech() {
   recognition.start();
 
   recognition.onresult = function(event) {
-    let speechResult = event.results[0][0].transcript.toLowerCase();
+    var speechResult = event.results[0][0].transcript.toLowerCase();
     diagnosticPara.textContent = 'Speech received: ' + speechResult + '.';
     speakText('Speech received: ' + speechResult);
-    if (speechResult === phrase) {
+    if(speechResult === phrase) {
       resultPara.textContent = 'I heard the correct phrase!';
       resultPara.style.background = 'lime';
       speakText('I heard the correct phrase!');
@@ -197,7 +184,8 @@ function testSpeech() {
     console.log('Confidence: ' + event.results[0][0].confidence);
   }
 
-  recognition.onend = function(event) {
+  recognition.onspeechend = function() {
+    recognition.stop();
     testBtn.disabled = false;
     testBtn.textContent = 'Start new test';
   }
@@ -207,11 +195,38 @@ function testSpeech() {
     testBtn.textContent = 'Start new test';
     diagnosticPara.textContent = 'Error occurred in recognition: ' + event.error;
   }
+  
+  recognition.onaudiostart = function(event) {
+    console.log('SpeechRecognition.onaudiostart');
+  }
+  
+  recognition.onaudioend = function(event) {
+    console.log('SpeechRecognition.onaudioend');
+  }
+  
+  recognition.onend = function(event) {
+    console.log('SpeechRecognition.onend');
+  }
+  
+  recognition.onnomatch = function(event) {
+    console.log('SpeechRecognition.onnomatch');
+  }
+  
+  recognition.onsoundstart = function(event) {
+    console.log('SpeechRecognition.onsoundstart');
+  }
+  
+  recognition.onsoundend = function(event) {
+    console.log('SpeechRecognition.onsoundend');
+  }
+  
+  recognition.onspeechstart = function (event) {
+    console.log('SpeechRecognition.onspeechstart');
+  }
+  
+  recognition.onstart = function(event) {
+    console.log('SpeechRecognition.onstart');
+  }
 }
 
-let phrasePara = document.querySelector('.phrase');
-let resultPara = document.querySelector('.result');
-let diagnosticPara = document.querySelector('.output');
-
-let testBtn = document.querySelector('button');
 testBtn.addEventListener('click', testSpeech);
